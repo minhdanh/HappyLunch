@@ -4,23 +4,33 @@ require 'capybara/poltergeist'
 class OrderLunchService
   include Capybara::DSL
 
-  attr_accessor :crawler, :result
+  attr_accessor :crawler, :result, :unavailable_items
 
   def initialize
     @crawler = set_up_crawler
     @result = false
+    @unavailable_items = []
   end
 
   def call
     go_to_gcct
     fill_order_item
-    fill_contact_info
-    skip_captcha
-    submit_order
-    sleep(1)
-    check_status
-    close_crawler
+    if unavailable_items?
+      # call service
+      SlackMessageServices::NotifyUnavailableDishes.new(@unavailable_items).call
+    else
+      fill_contact_info
+      skip_captcha
+      submit_order
+      sleep(1)
+      check_status
+      close_crawler
+    end
     result
+  end
+
+  def unavailable_items?
+    @unavailable_items.present?
   end
 
   private
@@ -32,9 +42,13 @@ class OrderLunchService
   def fill_order_item
     Order.today.first.order_items.each do |item|
       item_element = crawler.all(".name", text: item.dish.name)[0]
-      parent = item_element.find(:xpath, '..')
-      assign_quantity_item(parent)
-      select_item(parent)
+      if item_element.nil?
+        @unavailable_items << item
+      else
+        parent = item_element.find(:xpath, '..')
+        assign_quantity_item(parent)
+        select_item(parent)
+      end
     end
   end
 
