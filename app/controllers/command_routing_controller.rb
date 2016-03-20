@@ -1,7 +1,7 @@
 class CommandRoutingController < ApplicationController
   def index
-    raw_command = params[:command].strip
-    command_params = raw_command.split(/\/lunch +(menu|order) *([\d,\s]+)*/)
+    raw_command = params[:text].strip
+    command_params = raw_command.split(/(menu|order) *([\d,\s]+)*/)
     if command_params[1] == "menu"
       render text: SlackMessageServices::SendMenu.format_content
     elsif command_params[1] == "order"
