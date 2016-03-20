@@ -1,4 +1,4 @@
 Rails.application.routes.draw do
-  post "orders", to: "orders#create"
+  post "lunch", to: "command_routing#index"
   resources :orders
 end

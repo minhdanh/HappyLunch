@@ -1,9 +1,10 @@
 class SaveOrderItemService
-  LUNCH_CODE = "#happylunch".freeze
+  LUNCH_CODE = ENV['LUNCH_CODE'].freeze
   attr_reader :info, :success, :saved_order_items
 
-  def initialize(info)
-    @info = info
+  def initialize(username, item_numbers)
+    @username = username
+    @item_numbers = item_numbers.split(",")
     @success = true
     @saved_order_items = []
   end
@@ -11,16 +12,17 @@ class SaveOrderItemService
   # rubocop:disable MethodLength
   def call
     return false unless today_order
-    destroy_old_orders(info["user_name"])
+    destroy_old_orders(@username)
     begin
-      Dish.where(item_number: item_numbers).each do |dish|
-        order_item = OrderItem.new(order: today_order, username: info["user_name"], dish: dish)
+      Dish.where(item_number: @item_numbers).each do |dish|
+        p dish
+        order_item = OrderItem.new(order: today_order, username: @username, dish: dish)
         @saved_order_items << order_item if order_item.save
       end
     rescue ActiveRecord::RecordInvalid
-      success = false
+      return false
     end
-    success
+    return true
   end
   # rubocop:enable MethodLength
 
@@ -30,10 +32,5 @@ class SaveOrderItemService
 
   def destroy_old_orders(username)
     OrderItem.where(order: today_order, username: username).destroy_all
-  end
-
-  def item_numbers
-    message = info["text"].gsub!(LUNCH_CODE, "").strip
-    message.split(", ")
   end
 end
