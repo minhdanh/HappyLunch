@@ -14,7 +14,7 @@ class CommandRoutingController < ApplicationController
         text << ")\n"
       end
       if text == ""
-        render text: "Nobody ordered yet."
+        render text: "Chưa có mống nào đặt cơm cả. :-/"
       else
         render text: text
       end
@@ -24,13 +24,13 @@ class CommandRoutingController < ApplicationController
           if service.call
             render text: SlackMessageServices::SendConfirmationMessageToMember.format_content(service.saved_order_items)
           else
-            render text: "Error when making order."
+            render text: "Bị lỗi gì rồi, hông đặt được cơm. :scream:"
           end
       else
-        render text: "Incorrect syntax"
+        render text: "Gõ lệnh không đúng rồi ku."
       end
     else
-      render text: "Command not recognized."
+      render text: "Hổng biết là có lệnh này :))"
     end
   end
 end

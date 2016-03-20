@@ -6,7 +6,7 @@ module SlackMessageServices
     end
 
     def self.format_content
-      content = ["Menu for today"]
+      content = ["Thực đơn hiện có các món sau:"]
       Dish.today.order(:item_number).each do |dish|
         content << "#{dish.item_number}. #{dish.name} - #{dish.price} VND"
       end

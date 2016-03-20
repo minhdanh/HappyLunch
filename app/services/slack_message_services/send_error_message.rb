@@ -1,7 +1,7 @@
 module SlackMessageServices
   class SendErrorMessage < Base
     def self.call
-      content = "<!here> Sorry, We cannot order lunch. There are something wrong with waiter."
+      content = "Hix, bị lỗi gì nên hông đặt được cơm rồi. Thử lại hoặc đặt thủ công nha!"
       send_message(content)
     end
   end

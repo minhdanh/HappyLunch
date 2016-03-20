@@ -8,7 +8,7 @@ module SlackMessageServices
     end
 
     def self.format_content
-      content = ["<!here> We have ordered lunch successfully. :dancer:"]
+      content = ["Đã đặt các món ăn xong hết rồi. Mí bạn  khỏi lo trưa nay đói nha. :dancer:"]
       order_items.all.each do |item|
         content << "*#{item.username}* #{item.dish.name}"
       end
