@@ -15,7 +15,6 @@ class SaveOrderItemService
     destroy_old_orders(@username)
     begin
       Dish.where(item_number: @item_numbers).each do |dish|
-        p dish
         order_item = OrderItem.new(order: today_order, username: @username, dish: dish)
         @saved_order_items << order_item if order_item.save
       end
