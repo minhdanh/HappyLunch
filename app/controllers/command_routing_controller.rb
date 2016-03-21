@@ -16,6 +16,7 @@ class CommandRoutingController < ApplicationController
       if text == ""
         render text: "Chưa có mống nào đặt cơm cả. :-/"
       else
+        text << "Danh sách đặt món:\n"
         render text: text
       end
     elsif command_params[1] == "order"
