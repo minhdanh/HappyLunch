@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::API
-  before_action :check_request
+  # before_action :check_request
 
   private
 
