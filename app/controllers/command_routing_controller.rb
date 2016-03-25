@@ -24,7 +24,7 @@ class CommandRoutingController < ApplicationController
       else
         message = "Danh sách đặt món:\n"
         if Order.today.first.ordered?
-          message << "(Đã đặt xong)\n"
+          message << "(Đã đặt xong - Tổng cộng *#{order_items.count}* phần)\n"
         end
         render text: text.prepend("#{message}\n")
       end
