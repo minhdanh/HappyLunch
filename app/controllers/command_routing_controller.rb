@@ -11,11 +11,12 @@ class CommandRoutingController < ApplicationController
       render text: message
     elsif command_params[1] == "orders"
       text = ""
-      Order.today.first.order_items.pluck(:dish_id).uniq.each do |dish_id|
+      order_items = Order.today.first.order_items
+      order_items.pluck(:dish_id).uniq.each do |dish_id|
         dish = Dish.find_by(id: dish_id)
         text << "#{dish.item_number}. #{dish.name} - #{dish.price} VNĐ ("
-        order_items = OrderItem.where(dish_id: dish_id)
-        text << order_items.map(&:username).join(", ")
+        sub_order_items = order_items.where(dish_id: dish_id)
+        text << sub_order_items.map(&:username).join(", ")
         text << ")\n"
       end
       if text == ""
